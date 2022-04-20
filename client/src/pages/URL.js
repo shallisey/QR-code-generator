@@ -1,11 +1,14 @@
 import { Form, Button, Col, Row, Container } from "react-bootstrap";
-import { React, useState, useEffect } from "react";
+import { React, useState } from "react";
+import { useNavigate } from "react-router-dom";
 
 const URL = () => {
     // Setup states
     const [qrCode, setqrCode] = useState({});
+    const navigate = useNavigate();
 
     const create_request = async (e) => {
+        e.preventDefault();
         console.log(JSON.stringify(qrCode));
         const res = {
             method: "POST",
@@ -16,9 +19,14 @@ const URL = () => {
         };
 
         const response = await fetch("/create/URL-QR-Code", res);
-        // const data = await response.json();
+        const data = await response.json();
 
-        console.log(response);
+        console.log(data);
+
+        if (data.success) {
+            console.log("success");
+            navigate(`/get-QR-Code`, { state: data.success });
+        }
     };
 
     console.log(`URL: ${qrCode.url}\nFill_color: ${qrCode.fill_color}`);

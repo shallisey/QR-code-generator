@@ -11,7 +11,6 @@ def main(file, *args):
     print(kwargs)
 
     if 'url' in kwargs:
-        print("Doing {arg} stuff".format(arg=sys.argv[1]))
         try:
             create_url_qrcode(kwargs=kwargs)
         except IndexError:

@@ -1,9 +1,14 @@
 from flask import Flask
 from flask import request
+from flask_cors import CORS
+
 import os
+import uuid
+
 import json
 
 app = Flask(__name__)
+CORS(app)
 
 
 @app.route('/')
@@ -24,9 +29,15 @@ def create_URL_QR_code():
     for key in data:
         cmd += f' {key}={data[key]}'
 
+    if 'filename' not in data:
+        filename = f'{uuid.uuid4().hex}.png'
+        cmd += f' filename={filename}'
+
+        print("added to command")
+
     os.system(cmd)
 
-    return {"result": cmd}
+    return {"success": filename}
 
 
 @app.route('/file_cleanup')
