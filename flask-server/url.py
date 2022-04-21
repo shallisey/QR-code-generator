@@ -46,6 +46,7 @@ def create_url_qrcode(**kwargs):
         img.save('{path}{filename}'.format(path=SAVE_DIR,
                                            filename=filename))  # try:  # # Compose the filename  # for the file.filename = unique_id + '.png'        Create our qrcode base       qr = qrcode.QRCode(version=1, error_correction=qrcode.constants.ERROR_CORRECT_L, box_size=10, border=4)          Add our url to the qrcode and fill it out       qr.add_data(url)       qr.make(fit=True)          This will make our image with the default colors       img = qr.make_image(fill_color="black", back_color="white")          Create the directory where we will save these QR codes       make_directory_exist(SAVE_DIR)          Save the image to the given file path       img.save("{dir_path}{filename}".format(dir_path=SAVE_DIR, filename=filename))   except Exception as e:       err = open(  #     'error.txt', 'a')  # err.write(  #     'Error: {error}\nfilename: {filename}\nURL: {url}\n\n'.format(error=e,  #                                                                   filename=unique_id + '.png',  #                                                                   url=url))  # err.close()
 
+
     except Exception as e:
         err = open('error.txt', 'a')
         err.write(

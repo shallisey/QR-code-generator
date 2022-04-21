@@ -25,7 +25,7 @@ const URL = () => {
 
         if (data.success) {
             console.log("success");
-            navigate(`/get-QR-Code`, { state: data.success });
+            navigate(`/get-QR-Code/${data.success}`, { state: data.success });
         }
     };
 
