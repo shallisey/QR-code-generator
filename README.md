@@ -7,3 +7,5 @@ Links
     - help figure out how to download an image from backend.
 2. https://github.com/osu-cs340-ecampus/flask-starter-app#gunicorn
     - Setup persistent server on flip servers
+3. https://stackoverflow.com/questions/44209978/serving-a-front-end-created-with-create-react-app-with-flask
+    - Build folder serving
