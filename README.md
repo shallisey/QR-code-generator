@@ -11,3 +11,6 @@ Links
     - Build folder serving
 4. https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ 
     - Helped understand lifting up state
+5. https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices<br>
+   https://stackoverflow.com/questions/11642926/stop-close-webcam-stream-which-is-opened-by-navigator-mediadevices-getusermedia
+   - Setup a webcam and then go through and stop the webcam streams
