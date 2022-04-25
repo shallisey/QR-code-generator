@@ -18,6 +18,19 @@
     text-decoration-color: #61dafb;
 }
 
+#video-container {
+    margin: 0px auto;
+    width: 366.6px;
+    height: 275px;
+}
+
+#webcam-element {
+    width: 366.6px;
+    height: 275px;
+    background-color: #666;
+    border: 10px solid #333;
+}
+
 .App-header {
     background-color: #282c34;
     min-height: 100vh;

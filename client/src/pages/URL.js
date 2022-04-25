@@ -1,10 +1,12 @@
 import { Form, Button, Col, Row, Container } from "react-bootstrap";
 import { React, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import ColorPicker from "../components/ColorPicker";
+import Size from "../components/Size";
 
 const URL = () => {
     // Setup states
-    const [qrCode, setqrCode] = useState({});
+    const [qrCode, setQrCode] = useState({});
     const navigate = useNavigate();
 
     const create_request = async (e) => {
@@ -29,7 +31,9 @@ const URL = () => {
         }
     };
 
-    console.log(`URL: ${qrCode.url}\nFill_color: ${qrCode.fill_color}`);
+    console.log(
+        `URL: ${qrCode.url}\nFill_color: ${qrCode.fill_color}\nBack_color: ${qrCode.back_color}\nSize: ${qrCode.size}`
+    );
     return (
         <div className="container border-success">
             <div className="row border-success">
@@ -51,12 +55,19 @@ const URL = () => {
                             id=""
                             required
                             className="form-control"
+                            autocomplete="off"
                             onChange={(event) =>
-                                setqrCode((newUrl) => ({ ...newUrl, url: event.target.value }))
+                                setQrCode((newUrl) => ({ ...newUrl, url: event.target.value }))
                             }
                         />
                     </div>
+
                     {/* END URL INPUT */}
+
+                    <ColorPicker setQrCode={setQrCode} />
+
+                    <Size setQrCode={setQrCode} />
+
                     {/* BEGIN VERSION INPUT */}
                     {/* <div className="text-left mt-3">
                         <label htmlFor="version" className="align-top">
@@ -74,72 +85,6 @@ const URL = () => {
                     </div> */}
                     {/* END VERSION INPUT */}
 
-                    {/* BEGIN COLOR INPUT */}
-                    <div className="text-left mt-3">
-                        <label htmlFor="back_color" className="align-top">
-                            Pick Dark Color
-                        </label>
-                        <input
-                            type="color"
-                            name="back_color"
-                            id=""
-                            className="form-control"
-                            onChange={(event) =>
-                                setqrCode((newFillColor) => ({
-                                    ...newFillColor,
-                                    back_color: event.target.value,
-                                }))
-                            }
-                        />
-                        <small className="text-muted">
-                            This should be a relatively darker color
-                        </small>
-                    </div>
-
-                    <div className="text-left mt-3">
-                        <label htmlFor="fill_color" className="align-top">
-                            Pick Lighter Color
-                        </label>
-                        <input
-                            type="color"
-                            name="fill_color"
-                            id=""
-                            className="form-control"
-                            onChange={(event) =>
-                                setqrCode((newFillColor) => ({
-                                    ...newFillColor,
-                                    fill_color: event.target.value,
-                                }))
-                            }
-                        />
-                        <small className="text-muted">
-                            This should be a relatively lighter color
-                        </small>
-                    </div>
-                    {/* END COLOR INPUT */}
-
-                    {/* BEGIN SIZE INPUT */}
-                    <div className="text-left mt-3">
-                        <label htmlFor="size" className="align-top">
-                            Size
-                        </label>
-                        <input
-                            type="number"
-                            name="size"
-                            id=""
-                            min="1"
-                            max="14"
-                            className="form-control"
-                            onChange={(event) =>
-                                setqrCode((newSize) => ({
-                                    ...newSize,
-                                    size: event.target.value,
-                                }))
-                            }
-                        />
-                        <small className="text-muted">How large you want your QR code to be</small>
-                    </div>
-                    {/* END SIZE INPUT */}
                     <input className="m-5" type="submit" value="Generate QR Code" />
                 </form>
                 {/* END FORM */}
