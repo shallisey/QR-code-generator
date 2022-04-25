@@ -9,3 +9,5 @@ Links
     - Setup persistent server on flip servers
 3. https://stackoverflow.com/questions/44209978/serving-a-front-end-created-with-create-react-app-with-flask
     - Build folder serving
+4. https://www.freecodecamp.org/news/what-is-lifting-state-up-in-react/ 
+    - Helped understand lifting up state
