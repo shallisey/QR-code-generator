@@ -14,3 +14,8 @@ Links
 5. https://developer.mozilla.org/en-US/docs/Web/API/MediaDevices<br>
    https://stackoverflow.com/questions/11642926/stop-close-webcam-stream-which-is-opened-by-navigator-mediadevices-getusermedia
    - Setup a webcam and then go through and stop the webcam streams
+
+
+Somethings to think about
+1. https://stackoverflow.com/questions/6472233/can-i-store-images-in-mysql#:~:text=Yes%2C%20you%20can%20store%20images,the%20images%20in%20the%20database
+    - How to keep track of images. On the file system or on the file system AND store path in mysql database
