@@ -14,13 +14,13 @@ function HomePage() {
                     </div>
                 </div>
 
-                <div className="row m-4 justify-content-center" id="written-instructions">
+                {/* <div className="row m-4 justify-content-center" id="written-instructions">
                     <div>
                         <h3 className="row">How to use this app</h3>
                         <br />
                         <p>[Instructions go here]</p>
                     </div>
-                </div>
+                </div> */}
             </div>
         </div>
     );

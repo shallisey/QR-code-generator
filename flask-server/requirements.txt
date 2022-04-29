@@ -2,3 +2,7 @@ flask
 qrcode
 pillow
 flask-cors
+opencv-python
+pyzbar
+pyzbar[scripts]
+Werkzeug
