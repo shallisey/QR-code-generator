@@ -1,8 +1,11 @@
 import React, { useEffect, useRef, useState } from "react";
+import Upload from "../components/Upload";
 
 const Read_QR_Code = () => {
     const [useWebcam, setUseWebcam] = useState(false);
     const webcamElement = useRef(null);
+
+    const [image, setImage] = useState({ file: null });
 
     const startWebcam = () => {
         setUseWebcam(true);
@@ -28,7 +31,9 @@ const Read_QR_Code = () => {
         });
     };
 
-    console.log(webcamElement);
+    // if (image.file) {
+    //     console.log(image.file.name);
+    // }
 
     return (
         <div className="container border-success">
@@ -40,16 +45,8 @@ const Read_QR_Code = () => {
             <div className="container">
                 <div className="row">
                     {/* START UPLOAD FILE */}
-                    <div className="col border mt-5 mr-1">
-                        <h3>Upload QR Code</h3>
-                        <form action="" className="mt-3">
-                            <label htmlFor="url" className="align-top">
-                                Select a file
-                            </label>
-                            <input type="file" accept="image/png" />
-                            <input type="submit" value="Upload QR Code" />
-                        </form>
-                    </div>
+
+                    <Upload image={image} setImage={setImage} />
                     {/* END UPLOAD FILE */}
 
                     {/* START WEBCAM SCAN */}

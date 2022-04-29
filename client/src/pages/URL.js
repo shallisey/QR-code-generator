@@ -28,7 +28,7 @@ const URL = () => {
         if (data.success) {
             console.log("success");
             navigate(`/get-QR-Code/${data.success}`, { state: data.success });
-        }
+        } else alert(`${data.error}`);
     };
 
     console.log(

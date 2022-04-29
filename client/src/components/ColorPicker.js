@@ -4,19 +4,19 @@ const ColorPicker = ({ setQrCode }) => {
     return (
         <React.Fragment>
             <div className="text-left mt-3">
-                <label htmlFor="back_color" className="align-top">
+                <label htmlFor="fill_color" className="align-top">
                     Pick Dark Color
                 </label>
                 <input
                     type="color"
-                    name="back_color"
+                    name="fill_color"
                     id=""
                     defaultValue="#000000"
                     className="form-control"
                     onChange={(event) =>
                         setQrCode((newFillColor) => ({
                             ...newFillColor,
-                            back_color: event.target.value,
+                            fill_color: event.target.value,
                         }))
                     }
                 />
@@ -24,19 +24,19 @@ const ColorPicker = ({ setQrCode }) => {
             </div>
 
             <div className="text-left mt-3">
-                <label htmlFor="fill_color" className="align-top">
+                <label htmlFor="back_color" className="align-top">
                     Pick Lighter Color
                 </label>
                 <input
                     type="color"
-                    name="fill_color"
+                    name="back_color"
                     id=""
                     defaultValue="#FFFFFF"
                     className="form-control"
                     onChange={(event) =>
                         setQrCode((newFillColor) => ({
                             ...newFillColor,
-                            fill_color: event.target.value,
+                            back_color: event.target.value,
                         }))
                     }
                 />
