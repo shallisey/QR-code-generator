@@ -13,6 +13,43 @@
     }
 }
 
+/* .input-container {
+    display: flex;
+    flex-direction: row;
+    border: 1px solid #374669;
+    border-radius: 5px;
+    background: #fff;
+
+    overflow: hidden;
+} */
+
+/* .input-icon-container button {
+    padding: 10px;
+    float: right;
+} */
+
+/* .input-icon-container input {
+    outline: none;
+    border: none;
+    background: none;
+    font-size: 1em;
+    padding: 0.5em;
+    color: inherit;
+    flex: auto 1 1;
+    float: left;
+    width: 100%;
+    background: none;
+    background-color: transperant;
+} */
+
+.button .icon {
+    background: "../public/closed-eye.png" no-repeat;
+    float: left;
+    width: 20px;
+    height: 20px;
+    margin-right: 10px;
+}
+
 .navvy {
     background-color: #3e0070;
     text-decoration-color: #61dafb;

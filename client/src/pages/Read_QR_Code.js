@@ -1,4 +1,4 @@
-import React, { useEffect, useRef, useState } from "react";
+import React, { useRef, useState } from "react";
 import Upload from "../components/Upload";
 
 const Read_QR_Code = () => {
@@ -50,7 +50,7 @@ const Read_QR_Code = () => {
                     {/* END UPLOAD FILE */}
 
                     {/* START WEBCAM SCAN */}
-                    <div className="col border mt-5 ml-1">
+                    {/* <div className="col border mt-5 ml-1">
                         <h3>Scan via webcam</h3>
                         <div id="video-container">
                             <video ref={webcamElement} id="webcam-element"></video>
@@ -64,8 +64,8 @@ const Read_QR_Code = () => {
                                 Start
                             </button>
                         )}
-                    </div>
-                    {/* START WEBCAM SCAN */}
+                    </div> */}
+                    {/* END WEBCAM SCAN */}
                 </div>
             </div>
         </div>

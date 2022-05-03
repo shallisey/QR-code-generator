@@ -9,7 +9,7 @@ const Size = ({ setQrCode }) => {
             <input
                 type="number"
                 name="size"
-                id=""
+                id="number"
                 min="1"
                 max="14"
                 className="form-control"
