@@ -18,8 +18,9 @@ def main(file, *args):
         except IndexError:
             print(
                 "Invalid argument. Make sure you add a url to the end of your arguments")
-    # elif sys.argv[1].lower() == '--wifi':
-    #     print("Doing {arg} stuff".format(arg=sys.argv[1]))
+    # elif 'wifi' in kwargs:
+    #     try:
+
     elif 'read' in kwargs:
         # print("Doing {arg} stuff".format(arg='read'))
         try:

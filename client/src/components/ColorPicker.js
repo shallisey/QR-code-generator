@@ -10,7 +10,7 @@ const ColorPicker = ({ setQrCode }) => {
                 <input
                     type="color"
                     name="fill_color"
-                    id=""
+                    id="back"
                     defaultValue="#000000"
                     className="form-control"
                     onChange={(event) =>
@@ -30,7 +30,7 @@ const ColorPicker = ({ setQrCode }) => {
                 <input
                     type="color"
                     name="back_color"
-                    id=""
+                    id="fill"
                     defaultValue="#FFFFFF"
                     className="form-control"
                     onChange={(event) =>
