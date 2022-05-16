@@ -6,3 +6,5 @@ opencv-python
 pyzbar
 pyzbar[scripts]
 Werkzeug
+cryptography
+requests

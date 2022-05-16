@@ -8,6 +8,7 @@ from WiFi import wifi_data, make_WiFi_QR
 import os
 import os.path
 import uuid
+import requests
 import qrcode
 from subprocess import call
 from read import read_QR_code
@@ -23,6 +24,7 @@ CORS(app)
 
 ALLOWED_EXTENSIONS = {'png'}
 
+URL = "http://localhost:8888/decrypt"
 
 @app.route('/')
 def index():
@@ -45,7 +47,6 @@ def get_image(img):
 
 @app.route('/create/URL-QR-Code', methods=['POST'])
 def create_URL_QR_code():
-
     data = request.json
     print(data)
     cmd = "python3 main_qr.py"
@@ -72,16 +73,20 @@ def create_URL_QR_code():
 @app.route('/create/WIFI-QR-Code', methods=['POST'])
 def create_WIFI_QR_code():
     data = request.json
-    # print(data)
     if 'ssid' not in data or 'authType' not in data:
         return {
             'Error': 'This is not WiFi data'
         }
 
+    # Decrypt password
+    encrypted_password = data['password']
+
+    # Send off encrypted password and receive encrypted password
+    decrypted_password = requests.post(URL, encrypted_password, headers={"Content-Type": "text/plain"}).text
 
     # Create WiFi string for the QR code data
     qr_code_data_for_wifi = wifi_data(
-        ssid=data['ssid'], authentication_type=data['authType'], password=data['password'])
+        ssid=data['ssid'], authentication_type=data['authType'], password=decrypted_password)
 
     if False in qr_code_data_for_wifi:
         return qr_code_data_for_wifi
@@ -91,7 +96,7 @@ def create_WIFI_QR_code():
     data['wifi'] = qr_code_data_for_wifi[True]
     data['filename'] = filename
 
-    print("Data:", data)
+    # print("Data:", data)
 
     make_WiFi_QR(kwargs=data)
 

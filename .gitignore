@@ -1,6 +1,16 @@
 node_modules
 
 venv
+upload
+img
+read
+
+.idea
+.gitignore
+.vscode
+
+key_file.txt
+
 
 error.txt
 
