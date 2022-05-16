@@ -2,11 +2,10 @@ node_modules
 
 venv
 upload
-flask-server/img/
+img
 read
 
 .idea
-.gitignore
 .vscode
 
 key_file.txt

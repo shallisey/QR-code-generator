@@ -4,11 +4,15 @@ import sys
 from flask import Flask, request, send_from_directory, abort
 from flask_cors import CORS
 from werkzeug.utils import secure_filename
+from WiFi import wifi_data, make_WiFi_QR
 import os
 import os.path
 import uuid
+import requests
+import qrcode
 from subprocess import call
 from read import read_QR_code
+
 
 import json
 
@@ -20,6 +24,7 @@ CORS(app)
 
 ALLOWED_EXTENSIONS = {'png'}
 
+URL = "http://localhost:8888/decrypt"
 
 @app.route('/')
 def index():
@@ -42,7 +47,6 @@ def get_image(img):
 
 @app.route('/create/URL-QR-Code', methods=['POST'])
 def create_URL_QR_code():
-
     data = request.json
     print(data)
     cmd = "python3 main_qr.py"
@@ -66,6 +70,45 @@ def create_URL_QR_code():
     return {"error": "No file", "command": cmd}
 
 
+@app.route('/create/WIFI-QR-Code', methods=['POST'])
+def create_WIFI_QR_code():
+    data = request.json
+    if 'ssid' not in data or 'authType' not in data:
+        return {
+            'Error': 'This is not WiFi data'
+        }
+
+    # Decrypt password
+    encrypted_password = data['password']
+
+    # Send off encrypted password and receive encrypted password
+    decrypted_password = requests.post(URL, encrypted_password, headers={"Content-Type": "text/plain"}).text
+
+    # Create WiFi string for the QR code data
+    qr_code_data_for_wifi = wifi_data(
+        ssid=data['ssid'], authentication_type=data['authType'], password=decrypted_password)
+
+    if False in qr_code_data_for_wifi:
+        return qr_code_data_for_wifi
+
+    filename = uuid.uuid4().hex + '.png'
+
+    data['wifi'] = qr_code_data_for_wifi[True]
+    data['filename'] = filename
+
+    # print("Data:", data)
+
+    make_WiFi_QR(kwargs=data)
+
+    path_to_file = os.getcwd() + '/img/' + filename
+    # Check if file is saved
+    if os.path.exists(path_to_file):
+        return {"success": filename}
+
+
+    return {"Error": "File does not exist"}
+
+
 @app.route('/upload', methods=['POST'])
 def upload():
     print('hit the read route')
@@ -83,17 +126,17 @@ def upload():
         file.save(os.path.join(app.config['UPLOAD'], filename))
         file_path = os.path.join(app.config['UPLOAD'], filename)
 
-
         try:
             # Going to run the main_qr.py with the subprocess and capture the output
             result = subprocess.check_output(
-            ['python3', 'main_qr.py', "read={path}".format(path=file_path)])
+                ['python3', 'main_qr.py', "read={path}".format(path=file_path)])
 
             result = result.decode('utf-8').strip('\n')
 
             return {"Success": "You hit it", "Data": result}
         except subprocess.CalledProcessError as readexe:
-            print("Error in the processing of your QR Code\nreturncode: {returncode}\noutput: {out}".format(returncode=readexe.returncode, out=readexe.output))
+            print("Error in the processing of your QR Code\nreturncode: {returncode}\noutput: {out}".format(
+                returncode=readexe.returncode, out=readexe.output))
             return {"Error": {"message": "Error in the processing of your QR Code",
                               "returncode": readexe.returncode,
                               "output": readexe.output,
