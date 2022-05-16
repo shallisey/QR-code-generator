@@ -1,4 +1,4 @@
-import { React, useState } from "react";
+import { React, useState, useCallback } from "react";
 import { useNavigate } from "react-router-dom";
 
 import ColorPicker from "../components/ColorPicker";
@@ -31,14 +31,49 @@ const WiFi = () => {
         }
     };
 
-    const create_request = async (e) => {
+    
+    const updateToEncrypted = (encPass) => {
+        setQrCode({...qrCode, password: encPass})
+        // Setting within the scope of createRequest
+        qrCode.password = encPass
+    }
+
+    const encryptPassword = async () => {
+
+        const encryptRes = {
+            method: "POST",
+            headers: {
+                "Content-Type": "text/plain",
+            },
+            body: qrCode.password
+        }
+
+        const encryptResponse = await fetch("http://localhost:8888/encrypt", encryptRes)
+        // text() because the response is text/plain
+        const encryptData = await encryptResponse.text()
+        
+
+        return encryptData
+    
+    }
+
+    const createRequest = async (e) => {
         e.preventDefault();
+
+        await encryptPassword(qrCode)
+        // console.log("Before encryption", JSON.stringify(qrCode));
 
         /*
         THIS WHERE THE REQUEST TO OTHER MICROSERVICE WILL GO
         */
+        const encryptedPassword = await encryptPassword(qrCode)
+        console.log(encryptedPassword);
 
-        console.log(JSON.stringify(qrCode));
+        updateToEncrypted(encryptedPassword)
+
+
+        
+        console.log("After", JSON.stringify(qrCode));
         const res = {
             method: "POST",
             headers: {
@@ -66,9 +101,12 @@ const WiFi = () => {
 
     // console.log(`Auth type: ${isAuthType}\nPassword: ${qrCode.password}`);
 
-    console.log(
-        `SSID: ${qrCode.ssid}\nAuthentication Type: ${qrCode.authType}\nPassword: ${qrCode.password}\nFill_color: ${qrCode.fill_color}\nBack_color: ${qrCode.back_color}\nSize: ${qrCode.size}`
-    );
+    // console.log(
+    //     `SSID: ${qrCode.ssid}\nAuthentication Type: ${qrCode.authType}\nPassword: ${qrCode.password}\nFill_color: ${qrCode.fill_color}\nBack_color: ${qrCode.back_color}\nSize: ${qrCode.size}`
+    // );
+
+    console.log("OUT", qrCode);
+
     return (
         <div className="container border-success">
             <div className="row border-success">
@@ -78,7 +116,7 @@ const WiFi = () => {
             </div>
             <div className="row border-success justify-content-center">
                 {/* BEGIN FORM */}
-                <form onSubmit={create_request} className="col-6 form-group border">
+                <form onSubmit={createRequest} className="col-6 form-group border">
                     {/* BEGIN SSID INPUT */}
                     <div className="text-left mt-5">
                         <label htmlFor="url" className="align-top">
