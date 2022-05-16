@@ -67,13 +67,11 @@ const WiFi = () => {
         THIS WHERE THE REQUEST TO OTHER MICROSERVICE WILL GO
         */
         const encryptedPassword = await encryptPassword(qrCode)
-        console.log(encryptedPassword);
 
         updateToEncrypted(encryptedPassword)
 
 
         
-        console.log("After", JSON.stringify(qrCode));
         const res = {
             method: "POST",
             headers: {
@@ -89,12 +87,10 @@ const WiFi = () => {
         if (data.false) {
             alert(`Error: ${data.false}`);
         }
-        console.log(data);
 
         // REDIRECT
 
         if (data.success) {
-            console.log("success");
             navigate(`/get-QR-Code/${data.success}`, { state: data.success });
         }
     };
@@ -105,7 +101,6 @@ const WiFi = () => {
     //     `SSID: ${qrCode.ssid}\nAuthentication Type: ${qrCode.authType}\nPassword: ${qrCode.password}\nFill_color: ${qrCode.fill_color}\nBack_color: ${qrCode.back_color}\nSize: ${qrCode.size}`
     // );
 
-    console.log("OUT", qrCode);
 
     return (
         <div className="container border-success">
