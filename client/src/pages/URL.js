@@ -4,10 +4,57 @@ import { useNavigate } from "react-router-dom";
 import ColorPicker from "../components/ColorPicker";
 import Size from "../components/Size";
 
+// Used for URL validation
+const VALID_URL = true
+const INVALID_URL = false
+const CHECKING_VALIDITY = 0  // Request has been sent to check if it is valid.
+
 const URL = () => {
     // Setup states
     const [qrCode, setQrCode] = useState({});
+    const [validUrl, setValidUrl] = useState()
+    const [timer, setTimer] = useState(null)
     const navigate = useNavigate();
+
+
+    const validUrlRequest = async (url) => {
+        setValidUrl(CHECKING_VALIDITY)
+
+        // Send 
+        const res = {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify({"url": url}),
+        };
+
+        const response = await fetch("/url_checker", res);
+        const data = await response.json();
+        
+        console.log(data)
+        if (data.status_code === 301 || data.status_code === 200) {
+            setValidUrl(VALID_URL)
+        }
+        else {
+            setValidUrl(INVALID_URL)
+        }
+
+    }
+
+    const handleUrlValidation = async (event) => {
+        setQrCode((newUrl) => ({ ...newUrl, url: event.target.value }))
+        qrCode.url = event.target.value
+        clearTimeout(timer)
+        const newTimer = setTimeout(() => {
+            console.log("sending request");
+            validUrlRequest(qrCode.url)
+        }, 1000)
+
+        setTimer(newTimer)
+    }
+
+
 
     const create_request = async (e) => {
         e.preventDefault();
@@ -32,8 +79,9 @@ const URL = () => {
     };
 
     console.log(
-        `URL: ${qrCode.url}\nFill_color: ${qrCode.fill_color}\nBack_color: ${qrCode.back_color}\nSize: ${qrCode.size}`
+        `URL: ${qrCode.url}\nStatus: ${validUrl}\n`
     );
+    // Fill_color: ${qrCode.fill_color}\nBack_color: ${qrCode.back_color}\nSize: ${qrCode.size}
     return (
         <div className="container border-success">
             <div className="row border-success">
@@ -54,11 +102,10 @@ const URL = () => {
                             name="url"
                             id=""
                             required
-                            className="form-control"
-                            autocomplete="off"
-                            onChange={(event) =>
-                                setQrCode((newUrl) => ({ ...newUrl, url: event.target.value }))
-                            }
+                            className={"form-control"}
+                            autoComplete="off"
+                            
+                            onChange={handleUrlValidation}
                         />
                     </div>
 
