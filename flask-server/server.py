@@ -17,6 +17,9 @@ from read import read_QR_code
 
 import json
 
+TIMESLEEP = 5
+SHOWCASE = False
+
 app = Flask(__name__)
 app.config['QR-code-images'] = os.getcwd() + '/img/'
 app.config['url_microservice'] = os.getcwd() + '/url_validator_microservice/'
@@ -218,6 +221,8 @@ def read_from_response_file(path_to_response: str) -> int:
         if status_code == '':
             continue
         else:
+            if SHOWCASE:
+                time.sleep(TIMESLEEP)
             response_file = open(path_to_response, 'r+')
             fcntl.flock(response_file,
                         fcntl.LOCK_EX | fcntl.LOCK_NB)  # Lock the file
@@ -225,6 +230,7 @@ def read_from_response_file(path_to_response: str) -> int:
             fcntl.flock(response_file,
                         fcntl.LOCK_UN)  # Unlock the file for others to use
             response_file.close()
+            file_read_something = True
             return int(status_code)
 
 
