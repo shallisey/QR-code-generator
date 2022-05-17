@@ -5,20 +5,19 @@ import ColorPicker from "../components/ColorPicker";
 import Size from "../components/Size";
 
 // Used for URL validation
-const VALID_URL = true
-const INVALID_URL = false
-const CHECKING_VALIDITY = 0  // Request has been sent to check if it is valid.
+
 
 const URL = () => {
     // Setup states
     const [qrCode, setQrCode] = useState({});
-    const [validUrl, setValidUrl] = useState()
+    const [validUrl, setValidUrl] = useState(false)
+    const [checkUrl, setCheckUrl] = useState(true)
     const [timer, setTimer] = useState(null)
     const navigate = useNavigate();
 
 
     const validUrlRequest = async (url) => {
-        setValidUrl(CHECKING_VALIDITY)
+        setCheckUrl(true)
 
         // Send 
         const res = {
@@ -34,10 +33,12 @@ const URL = () => {
         
         console.log(data)
         if (data.status_code === 301 || data.status_code === 200) {
-            setValidUrl(VALID_URL)
+            setValidUrl(true)
+            setCheckUrl(false)
         }
         else {
-            setValidUrl(INVALID_URL)
+            setValidUrl(false)
+            setCheckUrl(false)
         }
 
     }
@@ -79,7 +80,7 @@ const URL = () => {
     };
 
     console.log(
-        `URL: ${qrCode.url}\nStatus: ${validUrl}\n`
+        `URL: ${qrCode.url}\nStatus: ${validUrl}\nCheck: ${checkUrl}`
     );
     // Fill_color: ${qrCode.fill_color}\nBack_color: ${qrCode.back_color}\nSize: ${qrCode.size}
     return (
@@ -102,11 +103,16 @@ const URL = () => {
                             name="url"
                             id=""
                             required
-                            className={"form-control"}
+                            className={(validUrl) ? "form-control is-valid": (!validUrl && !checkUrl) ? "form-control is-invalid" : "form-control"} 
                             autoComplete="off"
                             
                             onChange={handleUrlValidation}
                         />
+                    {!validUrl && !checkUrl ? (
+                        <small className="text-danger">"{qrCode.url}" is not a valid URL.</small>
+                    ) : (
+                        <div hidden className=""></div>
+                    )}
                     </div>
 
                     {/* END URL INPUT */}
