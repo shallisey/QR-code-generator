@@ -60,18 +60,17 @@ const WiFi = () => {
     const createRequest = async (e) => {
         e.preventDefault();
 
-        await encryptPassword(qrCode)
+
         // console.log("Before encryption", JSON.stringify(qrCode));
 
         /*
         THIS WHERE THE REQUEST TO OTHER MICROSERVICE WILL GO
         */
-        const encryptedPassword = await encryptPassword(qrCode)
+        if (qrCode.password != null) {
+            const encryptedPassword = await encryptPassword(qrCode)
+            updateToEncrypted(encryptedPassword)
+        }
 
-        updateToEncrypted(encryptedPassword)
-
-
-        
         const res = {
             method: "POST",
             headers: {

@@ -28,8 +28,10 @@ def handle_content_type():
 
 @app.route('/encrypt', methods=['POST'])
 def encrypt_string():
-
     byte_str = request.data
+
+    print(f"\n/encrypt Password to encrypt: {byte_str}\n")
+
     if len(byte_str) > 25:
         return jsonify({"Error": "Too long of a string. String must be less than 25 bytes long"})
     f = Fernet(key)
@@ -37,13 +39,17 @@ def encrypt_string():
     # call Fernet method to encrypt
     enc_str = f.encrypt(byte_str)
 
+    print(f"\n/encrypt Encrypted password: {enc_str}\n")
+
     return enc_str
 
 
 @app.route('/decrypt', methods=['POST'])
 def decrypt_string():
     byte_str = request.data
-    print(byte_str)
+
+    print(f"\n/decrypt Encrypted password: {byte_str}\n")
+
     f = Fernet(key)
 
     # call Fernet method to decrypt
@@ -51,6 +57,9 @@ def decrypt_string():
 
     # decode from bytes to str and send this back
     dec_str = dec_str.decode()
+
+    print(f"\n/decrypt Decrypted password: {dec_str}\n")
+
     return dec_str
 
 

@@ -3,7 +3,7 @@ import requests
 import time
 
 TIMESLEEP = 5
-SHOWCASE = True
+SHOWCASE = False
 
 # Will process the request to verify whether URL is valid or not
 
@@ -14,13 +14,13 @@ def url_check():
         # Open file with URL, grab the text from within and close file
         url_file = open('URLCheck.txt', 'r+')
         url = url_file.read()
-        url_file.truncate(0)
-        url_file.close()
 
         if url != '' and SHOWCASE:
+            print("Check the URLCheck.txt....")
             time.sleep(TIMESLEEP)
-            url_file.truncate(0)
+            print("Deleted")
 
+        url_file.truncate(0)
         url_file.close()
 
         # Checks to see if the file has been populated, if not just continues to loop until url is present
@@ -41,11 +41,14 @@ def url_check():
             print(status_code)
             # Open Response file, clear contents, write status code and close file
             url_response = open('URLResponse.txt', 'w')
+
             url_response.truncate(0)
             url_response.seek(0)
             url_response.write(str(status_code))
 
             url_response.close()
+            if url != '' and SHOWCASE:
+                print("Writing status code")
 
 
 if __name__ == '__main__':

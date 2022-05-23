@@ -92,8 +92,9 @@ def url_checker():
     # prepend http:// to the link
     if len(url) < len(http_prepend) or (
             url[0: len(http_prepend)] != http_prepend and url[
-                                                          0: len(https_prepend)] != https_prepend):
+                0: len(https_prepend)] != https_prepend):
         url = http_prepend + url
+
     # Write the URL to the file
     path_to_check = app.config['url_microservice'] + app.config['check_file']
     url_check = open(path_to_check, 'w')
@@ -102,7 +103,7 @@ def url_checker():
     url_check.write(url)
     url_check.close()
 
-    time.sleep(.1)
+    time.sleep(.2)
 
     # Read from the URLResponse file
     path_to_response = app.config['url_microservice'] + app.config[
@@ -121,10 +122,13 @@ def create_WIFI_QR_code():
 
     # Decrypt password
     encrypted_password = data['password']
-
-    # Send off encrypted password and receive encrypted password
-    decrypted_password = requests.post(URL, encrypted_password, headers={
-        "Content-Type": "text/plain"}).text
+    print(f"Data for qrCode: {data}")
+    if encrypted_password is not None:
+        # Send off encrypted password and receive encrypted password
+        decrypted_password = requests.post(URL, encrypted_password, headers={
+            "Content-Type": "text/plain"}).text
+    else:
+        decrypted_password = encrypted_password
 
     # Create WiFi string for the QR code data
     qr_code_data_for_wifi = wifi_data(ssid=data['ssid'],
@@ -210,26 +214,23 @@ def read_from_response_file(path_to_response: str) -> int:
         response_file = open(path_to_response, 'r+')
 
         # Using fcntl to lock files for race conditions
-        fcntl.flock(response_file,
-                    fcntl.LOCK_EX | fcntl.LOCK_NB)  # Lock the file
+        # fcntl.flock(response_file,
+        #             fcntl.LOCK_EX | fcntl.LOCK_NB)  # Lock the file
         status_code = response_file.readline()
+        if SHOWCASE and status_code != '':
+            print("Opening URLResonse.txt....")
+            time.sleep(TIMESLEEP)
         response_file.truncate(0)
-        fcntl.flock(response_file,
-                    fcntl.LOCK_UN)  # Unlock the file for others to use
+        # fcntl.flock(response_file,
+        #             fcntl.LOCK_UN)  # Unlock the file for others to use
         response_file.close()
+        if SHOWCASE and status_code != '':
+            print("Closing URLResonse.txt....")
 
         if status_code == '':
             continue
         else:
-            if SHOWCASE:
-                time.sleep(TIMESLEEP)
-            response_file = open(path_to_response, 'r+')
-            fcntl.flock(response_file,
-                        fcntl.LOCK_EX | fcntl.LOCK_NB)  # Lock the file
-            response_file.truncate(0)
-            fcntl.flock(response_file,
-                        fcntl.LOCK_UN)  # Unlock the file for others to use
-            response_file.close()
+
             file_read_something = True
             return int(status_code)
 
