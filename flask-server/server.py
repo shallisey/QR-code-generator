@@ -19,6 +19,7 @@ import json
 
 TIMESLEEP = 5
 SHOWCASE = False
+IMG_FOLDERS = ['/img', '/upload', '/read']
 
 app = Flask(__name__)
 app.config['QR-code-images'] = os.getcwd() + '/img/'
@@ -45,7 +46,6 @@ def index():
 
 @app.route('/get-image/<img>', methods=['GET'])
 def get_image(img):
-    print(app.config['QR-code-images'] + img, )
 
     try:
         return send_from_directory(directory=app.config['QR-code-images'],
@@ -58,7 +58,6 @@ def get_image(img):
 @app.route('/create/URL-QR-Code', methods=['POST'])
 def create_URL_QR_code():
     data = request.json
-    print(data)
     cmd = "python3 main_qr.py"
     for key in data:
         cmd += f' {key}={data[key]}'
@@ -85,15 +84,8 @@ def url_checker():
     if 'url' not in request.json:
         return {'Error': 'No url sent'}
 
-    url = request.json['url']
-    http_prepend = 'http://'
-    https_prepend = 'https://'
-
-    # prepend http:// to the link
-    if len(url) < len(http_prepend) or (
-            url[0: len(http_prepend)] != http_prepend and url[
-                0: len(https_prepend)] != https_prepend):
-        url = http_prepend + url
+    # Check if http:// or https:// are at the beginning of the url
+    url = prepend_for_url(request.json['url'])
 
     # Write the URL to the file
     path_to_check = app.config['url_microservice'] + app.config['check_file']
@@ -122,7 +114,6 @@ def create_WIFI_QR_code():
 
     # Decrypt password
     encrypted_password = data['password']
-    print(f"Data for qrCode: {data}")
     if encrypted_password is not None:
         # Send off encrypted password and receive encrypted password
         decrypted_password = requests.post(URL, encrypted_password, headers={
@@ -143,8 +134,8 @@ def create_WIFI_QR_code():
     data['wifi'] = qr_code_data_for_wifi[True]
     data['filename'] = filename
 
-    # print("Data:", data)
-
+    # Input data into qrCode
+    # If everything works with this function the file will be written in /img folder
     make_WiFi_QR(kwargs=data)
 
     path_to_file = os.getcwd() + '/img/' + filename
@@ -157,11 +148,12 @@ def create_WIFI_QR_code():
 
 @app.route('/upload', methods=['POST'])
 def upload():
-    print('hit the read route')
-    print(request.files)
+
+    # Sending a file as {file: <file_format>}
     if 'file' not in request.files:
         return {"Error": "Something happened???"}
 
+    # Grab the file that was sent from the client
     file = request.files['file']
     if file.filename == '':
         return {"Error": "Did you actually send a file?"}
@@ -174,6 +166,7 @@ def upload():
 
         try:
             # Going to run the main_qr.py with the subprocess and capture the output
+            # This will write the file to the /upload folder
             result = subprocess.check_output(['python3', 'main_qr.py',
                                               "read={path}".format(
                                                   path=file_path)])
@@ -193,8 +186,11 @@ def upload():
 
 @app.route('/file_cleanup')
 def file_cleanup():
-    cmd = 'python file_cleanup.py /Applications/CS361/QR-CODE-Project/react-flask-qrcode/flask-server/img'
-    os.system(cmd)
+    # Go through the folders that contain images either created or uploaded and
+    # Delete the files
+    for folder in IMG_FOLDERS:
+        cmd = f'python file_cleanup.py {os.getcwd()}{folder}'
+        os.system(cmd)
     return {'Files deleted': ':)'}
 
 
@@ -233,6 +229,24 @@ def read_from_response_file(path_to_response: str) -> int:
 
             file_read_something = True
             return int(status_code)
+
+
+def prepend_for_url(url_from_request):
+    """
+    This function will take the URL from the request from the client and 
+    will check if http:// needs to be prepended to that url.
+    """
+    url_from_request = request.json['url']
+    http_prepend = 'http://'
+    https_prepend = 'https://'
+
+    # prepend http:// to the link
+    if len(url_from_request) < len(http_prepend) or (
+            url_from_request[0: len(http_prepend)] != http_prepend and url_from_request[
+                0: len(https_prepend)] != https_prepend):
+        url_from_request = http_prepend + url_from_request
+
+    return url_from_request
 
 
 if __name__ == "__main__":

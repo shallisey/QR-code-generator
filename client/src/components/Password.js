@@ -35,10 +35,9 @@ const Password = ({ setQrCode, setShowPassword, showPassword, isAuthType }) => {
             </div>
 
             <small className="text-muted">
-                **At the moment I do not encrypt passwords so they will be sent as plaintext.
+                *Password is encryped on form submission
             </small>
-            <br></br>
-            <small className="text-muted">**If you can run this locally, please do so.</small>
+
         </div>
     );
 };
